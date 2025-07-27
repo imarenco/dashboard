@@ -1,283 +1,279 @@
 # Real-Time Sales Analytics Dashboard
 
-A modern, real-time sales analytics dashboard built with Next.js, Express.js, MongoDB, and Socket.IO. This application provides real-time transaction monitoring with instant updates and comprehensive analytics.
+A comprehensive real-time sales analytics dashboard built with Next.js, Express.js, MongoDB, and Socket.IO.
 
-## Features
+## 🚀 Quick Start
 
-- **Real-Time Updates**: Live transaction updates using Socket.IO
-- **Interactive Dashboard**: Beautiful, responsive UI with Tailwind CSS
-- **Transaction Management**: Add new transactions with customer details
-- **Search Functionality**: Filter transactions by customer name
-- **Analytics**: Real-time revenue tracking and transaction statistics
-- **Modern Architecture**: Clean separation of concerns with maintainable code
+### Using Docker (Recommended)
 
-## Tech Stack
-
-### Frontend
-- **Next.js 15** with App Router
-- **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **Socket.IO Client** for real-time updates
-
-### Backend
-- **Express.js** for API server
-- **TypeScript** for type safety and better development experience
-- **Domain-Driven Design (DDD)** architecture with clean layer separation
-- **MongoDB** with Mongoose ODM
-- **Socket.IO** for real-time communication
-- **CORS** enabled for cross-origin requests
-- **Dependency Injection** for better testability and maintainability
-
-## Prerequisites
-
-- Node.js (v18 or higher)
-- MongoDB (local installation or MongoDB Atlas)
-- npm or yarn package manager
-
-## Setup Instructions
-
-### Option 1: Docker (Recommended)
-
-#### Quick Start with Docker Compose
 ```bash
 # Clone the repository
 git clone <repository-url>
 cd real-time
 
+# Start all services
+./start.sh
 
-# for development with hot reloading
-docker-compose -f docker-compose.dev.yml up -d
+# Or manually with Docker Compose
+docker-compose up -d
 ```
 
-#### Access the Application
+**Access Points:**
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:5001
 - MongoDB: localhost:27017
 
-#### Docker Commands
+### Local Development
+
 ```bash
-# Start services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Rebuild and start
-docker-compose up --build -d
-
-# Development mode with hot reloading
-docker-compose -f docker-compose.dev.yml up -d
-```
-
-### Option 2: Local Development
-
-#### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd real-time
-```
-
-#### 2. Backend Setup
-```bash
+# Backend
 cd back
 npm install
-```
-
-Create a `.env` file in the `back` directory:
-```env
-MONGODB_URI=mongodb://localhost:27017/sales-analytics
-PORT=5001
-```
-
-Start the backend server:
-```bash
 npm run dev
-```
 
-#### 3. Frontend Setup
-```bash
-cd ../front
+# Frontend (in another terminal)
+cd front
 npm install
-```
-
-Start the frontend development server:
-```bash
 npm run dev
 ```
 
-#### 4. Access the Application
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5001
+## 🧪 Testing
 
-## Project Structure
+### Backend Tests
 
-```
-real-time/
-├── front/                 # Next.js frontend (Atomic Design)
-│   ├── src/
-│   │   ├── components/   # Atomic Design components
-│   │   │   ├── atoms/    # Basic building blocks
-│   │   │   ├── molecules/# Simple combinations
-│   │   │   ├── organisms/# Complex UI sections
-│   │   │   └── templates/# Page layouts
-│   │   ├── hooks/        # Custom React hooks
-│   │   ├── lib/          # Utility functions
-│   │   ├── types/        # TypeScript interfaces
-│   │   └── app/          # Next.js App Router
-│   └── package.json
-├── back/                  # Express.js backend (DDD Architecture)
-│   ├── src/
-│   │   ├── domain/       # Business logic and entities
-│   │   │   ├── entities/ # Domain entities
-│   │   │   ├── repositories/ # Repository interfaces
-│   │   │   └── services/ # Domain services
-│   │   ├── infrastructure/ # External concerns
-│   │   │   ├── database/ # Database models and repositories
-│   │   │   └── websocket/ # Socket.IO implementation
-│   │   ├── application/  # Use cases and application logic
-│   │   │   └── useCases/ # Application use cases
-│   │   ├── presentation/ # HTTP layer
-│   │   │   ├── controllers/ # Request handlers
-│   │   │   ├── routes/   # Route definitions
-│   │   │   ├── dto/      # Data Transfer Objects
-│   │   │   └── middleware/ # Express middleware
-│   │   ├── config/       # Configuration and DI container
-│   │   ├── utils/        # Utility functions
-│   │   └── app.ts        # Application entry point
-│   ├── dist/             # Compiled TypeScript
-│   └── package.json
-└── README.md
+```bash
+cd back
+
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests for CI
+npm run test:ci
 ```
 
-## API Endpoints
+### Frontend Tests
+
+```bash
+cd front
+
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests for CI
+npm run test:ci
+```
+
+### Test Coverage
+
+The project includes comprehensive test coverage for:
+
+**Backend:**
+- Domain Services (TransactionService)
+- Application Use Cases (CreateTransactionUseCase, GetTransactionsUseCase, GetAnalyticsUseCase)
+- Presentation Controllers (TransactionController)
+- Infrastructure Repositories (TransactionRepository)
+
+**Frontend:**
+- React Components (Button, Input, Card, etc.)
+- Custom Hooks (useSocket, useDebounce)
+- Context Providers (TransactionContext, AnalyticsContext)
+- API Client (api.ts)
+- Utility Functions (format.ts)
+
+## 🏗️ Architecture
+
+### Frontend (Atomic Design)
+- **Atoms**: Basic UI components (Button, Input, Card, Select, LoadingSpinner)
+- **Molecules**: Composite components (SearchBar, AnalyticsCard, TransactionForm)
+- **Organisms**: Complex components (AnalyticsCards, TransactionsTable, DashboardHeader)
+- **Templates**: Page layouts (DashboardTemplate, AddTransactionTemplate)
+- **Pages**: Route components with business logic
+
+### Backend (Domain-Driven Design)
+- **Domain Layer**: Entities, repositories interfaces, domain services
+- **Application Layer**: Use cases, application services
+- **Infrastructure Layer**: Database models, repositories implementations, external services
+- **Presentation Layer**: Controllers, routes, middleware
+
+## 🔧 Tech Stack
+
+### Frontend
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: React Context API
+- **Real-time**: Socket.IO Client
+- **Testing**: Jest, React Testing Library
+
+### Backend
+- **Framework**: Express.js
+- **Language**: TypeScript
+- **Database**: MongoDB with Mongoose ODM
+- **Real-time**: Socket.IO
+- **Architecture**: Domain-Driven Design (DDD)
+- **Testing**: Jest, Supertest
+
+### Infrastructure
+- **Containerization**: Docker & Docker Compose
+- **Database**: MongoDB
+- **Load Balancer**: Nginx (for multi-server setup)
+
+## 📡 API Endpoints
 
 ### Transactions
-- `GET /api/transactions` - Get all transactions (with optional customer name filter)
+- `GET /api/transactions` - Get all transactions
 - `POST /api/transactions` - Create a new transaction
 
 ### Analytics
-- `GET /api/analytics` - Get current analytics (total revenue)
+- `GET /api/analytics` - Get analytics data
 
-## Real-Time Events
+## 🔄 Real-Time Events
 
-### Socket.IO Events
-- `newTransaction` - Emitted when a new transaction is created
-- `analyticsUpdate` - Emitted when analytics are updated
+### Frontend → Backend
+- `join-dashboard` - Join dashboard room for real-time updates
+- `leave-dashboard` - Leave dashboard room
 
-## Technical Approach & Key Decisions
+### Backend → Frontend
+- `newTransaction` - New transaction created
+- `analyticsUpdate` - Analytics data updated
 
-### Architecture Decisions
-1. **Domain-Driven Design (DDD)**: Clean architecture with clear layer separation (Domain, Infrastructure, Application, Presentation)
-2. **Atomic Design**: Frontend components organized by complexity (Atoms, Molecules, Organisms, Templates)
-3. **Separation of Concerns**: Clear separation between frontend and backend with well-defined APIs
-4. **Real-Time Communication**: Socket.IO for instant updates without polling
-5. **Type Safety**: TypeScript throughout the stack for better development experience
-6. **Modern UI**: Tailwind CSS for rapid, consistent styling
-7. **Dependency Injection**: Container pattern for better testability and maintainability
+## 🐳 Docker Commands
 
-### Key Design Patterns
-1. **Domain-Driven Design**: Clean architecture with bounded contexts and domain entities
-2. **Repository Pattern**: Abstract data access layer for better testability
-3. **Use Case Pattern**: Application logic organized in use cases
-4. **Component-Based Architecture**: Reusable React components with clear responsibilities
-5. **Event-Driven Updates**: Real-time updates through Socket.IO events
-6. **RESTful API Design**: Clean, predictable API endpoints
-7. **Error Handling**: Comprehensive error handling on both frontend and backend
-8. **Dependency Injection**: Container pattern for loose coupling
-
-### Performance Considerations
-1. **Efficient Queries**: MongoDB aggregation for analytics calculations
-2. **Real-Time Updates**: Socket.IO for instant UI updates
-3. **Responsive Design**: Mobile-first approach with Tailwind CSS
-4. **Optimistic Updates**: Immediate UI feedback for better UX
-
-## Assumptions & Limitations
-
-### Assumptions
-- MongoDB is running locally or accessible via connection string
-- Users have basic understanding of Node.js and React
-- Development environment supports modern JavaScript features
-
-### Limitations
-- No authentication/authorization implemented
-- No data persistence beyond MongoDB
-- Limited to single currency analytics (though multi-currency support is prepared)
-- No pagination for large transaction lists
-- No data export functionality
-
-## Future Enhancements
-
-1. **Authentication**: User login and role-based access
-2. **Advanced Analytics**: Charts, graphs, and trend analysis
-3. **Data Export**: CSV/PDF export functionality
-4. **Pagination**: Handle large datasets efficiently
-5. **Multi-Currency Analytics**: Proper currency conversion and analysis
-6. **Real-Time Charts**: Live updating charts and graphs
-7. **Notification System**: Email/SMS alerts for high-value transactions
-
-## Points for Review Focus
-
-1. **Code Quality**: Clean, readable, and maintainable code structure
-2. **Real-Time Implementation**: Efficient Socket.IO usage and event handling
-3. **Error Handling**: Comprehensive error handling and user feedback
-4. **UI/UX**: Modern, responsive design with good user experience
-5. **API Design**: RESTful endpoints with proper HTTP status codes
-6. **Database Design**: Efficient MongoDB schema and queries
-7. **Performance**: Fast loading times and smooth real-time updates
-
-## Development Commands
-
-### Docker (Recommended)
 ```bash
 # Production
 docker-compose up -d
 
-# Development with hot reloading
+# Development (with hot reload)
 docker-compose -f docker-compose.dev.yml up -d
 
 # View logs
 docker-compose logs -f [service-name]
 
-# Stop all services
+# Stop services
 docker-compose down
+
+# Rebuild images
+docker-compose build --no-cache
 ```
 
-### Local Development
+## 🔍 Multi-Server WebSocket Management
 
-#### Backend
+For production scaling, the application supports multiple backend servers with shared WebSocket state:
+
+### Architecture
+- **Redis**: Message broker for Socket.IO scaling
+- **Nginx**: Load balancer for API and WebSocket traffic
+- **Multiple Backend Instances**: Horizontal scaling
+
+### Configuration
+- Set `REDIS_URL` environment variable
+- Configure `SERVER_ID` for each backend instance
+- Use Nginx for load balancing
+
+## 📊 Features
+
+- **Real-time Dashboard**: Live updates of transactions and analytics
+- **Transaction Management**: Add new transactions with validation
+- **Search Functionality**: Filter transactions by customer name
+- **Responsive Design**: Mobile-friendly interface
+- **Error Handling**: Comprehensive error management
+- **Loading States**: User feedback during operations
+- **Debounced Search**: Performance-optimized search with 100ms debounce
+
+## 🧪 Testing Strategy
+
+### Backend Testing
+- **Unit Tests**: Domain services, use cases, controllers
+- **Integration Tests**: API endpoints with mocked dependencies
+- **Repository Tests**: Database operations with test database
+
+### Frontend Testing
+- **Component Tests**: UI components with React Testing Library
+- **Hook Tests**: Custom hooks with renderHook
+- **Context Tests**: State management with mocked providers
+- **API Tests**: API client with mocked fetch
+
+### Test Coverage Goals
+- **Backend**: >80% coverage for domain and application layers
+- **Frontend**: >70% coverage for components and hooks
+- **Critical Paths**: 100% coverage for transaction creation and real-time updates
+
+## 🚨 Troubleshooting
+
+### Port Conflicts
+If ports are already in use:
 ```bash
-cd back
-npm run dev    # Start development server with ts-node
-npm run build  # Build TypeScript to JavaScript
-npm start      # Start production server
+# Check what's using the ports
+lsof -i :3000
+lsof -i :5001
+lsof -i :27017
+
+# Kill processes if needed
+kill -9 <PID>
 ```
 
-#### Frontend
+### Docker Issues
 ```bash
-cd front
-npm run dev    # Start development server
-npm run build  # Build for production
-npm start      # Start production server
+# Clean up Docker resources
+docker system prune -a
+
+# Rebuild without cache
+docker-compose build --no-cache
 ```
 
-## Troubleshooting
+### Test Issues
+```bash
+# Clear Jest cache
+npm test -- --clearCache
 
-1. **MongoDB Connection Issues**: Ensure MongoDB is running and connection string is correct
-2. **Socket.IO Connection**: Check that backend is running on port 5001
-3. **CORS Errors**: Verify CORS configuration in backend server
-4. **Port Conflicts**: Ensure ports 3000 and 5001 are available
+# Run tests with verbose output
+npm test -- --verbose
+```
 
-## Contributing
+## 📝 Assumptions & Limitations
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+### Assumptions
+- All transactions are in USD (dollars)
+- Customer names are case-insensitive for search
+- Real-time updates are not critical for analytics accuracy
+- Single-page application architecture
 
-## License
+### Limitations
+- No user authentication/authorization
+- No data persistence for search preferences
+- Limited to single currency (USD)
+- No pagination for large transaction lists
+- No offline support
 
-This project is licensed under the ISC License. 
+## 🎯 Review Focus Points
+
+1. **Architecture Decisions**: DDD implementation and Atomic Design
+2. **Real-time Implementation**: Socket.IO with proper error handling
+3. **State Management**: React Context with proper separation of concerns
+4. **Error Handling**: Comprehensive error boundaries and user feedback
+5. **Testing Strategy**: Unit and integration test coverage
+6. **Performance**: Debounced search and optimized re-renders
+7. **Scalability**: Multi-server WebSocket support
+8. **Code Quality**: TypeScript usage and clean code principles
+
+## 📈 Future Enhancements
+
+- User authentication and authorization
+- Multi-currency support
+- Advanced analytics and reporting
+- Data export functionality
+- Mobile app development
+- Performance monitoring and logging
+- Automated deployment pipeline 
