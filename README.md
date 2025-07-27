@@ -4,6 +4,29 @@ A comprehensive real-time sales analytics dashboard built with Next.js, Express.
 
 ## 🚀 Quick Start
 
+### Environment Variables
+
+The application uses these environment variables. **Note: For local development, these are optional as the application uses sensible defaults.**
+
+#### Backend Environment Variables
+```bash
+# Server Configuration
+PORT=5001                    # Server port (default: 5001)
+NODE_ENV=development         # Environment (development/production)
+
+# Database Configuration
+MONGODB_URI=mongodb://localhost:27017/sales-analytics  # MongoDB connection string
+
+# CORS Configuration
+FRONTEND_URL=http://localhost:3000  # Frontend URL for CORS (default: http://localhost:3000)
+```
+
+#### Frontend Environment Variables
+```bash
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:5001  # Backend API URL (default: http://localhost:5001)
+```
+
 ### Using Docker (Recommended)
 
 ```bash
