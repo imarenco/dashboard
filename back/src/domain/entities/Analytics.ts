@@ -3,4 +3,5 @@ export interface Analytics {
   totalTransactions: number;
   uniqueCustomers: number;
   averageTransactionValue: number;
+  baseCurrency: string;
 } 

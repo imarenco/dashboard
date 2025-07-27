@@ -1,4 +1,4 @@
-import { ITransactionRepository } from '../../../domain/repositories/ITransactionRepository';
+import { ITransactionRepository, CurrencyStats } from '../../../domain/repositories/ITransactionRepository';
 import { Transaction, CreateTransactionData, Analytics } from '../../../domain/entities';
 import { TransactionModel, ITransactionDocument } from '../models/TransactionModel';
 
@@ -34,6 +34,35 @@ export class TransactionRepository implements ITransactionRepository {
     return result.length > 0 ? result[0].uniqueCustomers : 0;
   }
 
+  async getTotalTransactions(): Promise<number> {
+    return TransactionModel.countDocuments();
+  }
+
+  async getAnalyticsByCurrency(): Promise<CurrencyStats[]> {
+    const result = await TransactionModel.aggregate([
+      {
+        $group: {
+          _id: '$currency',
+          totalAmount: { $sum: '$amount' },
+          transactionCount: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          currency: '$_id',
+          totalAmount: 1,
+          transactionCount: 1
+        }
+      },
+      {
+        $sort: { totalAmount: -1 }
+      }
+    ]);
+
+    return result;
+  }
+
   async getAnalytics(): Promise<Analytics> {
     const [totalRevenue, totalTransactions, uniqueCustomers] = await Promise.all([
       this.getTotalRevenue(),
@@ -47,7 +76,8 @@ export class TransactionRepository implements ITransactionRepository {
       totalRevenue,
       totalTransactions,
       uniqueCustomers,
-      averageTransactionValue
+      averageTransactionValue,
+      baseCurrency: 'USD',
     };
   }
 

@@ -1,11 +1,13 @@
 import { Transaction, CreateTransactionData, Analytics } from '../entities';
 import { ITransactionRepository } from '../repositories/ITransactionRepository';
 import { ISocketManager } from './ISocketManager';
+import { CurrencyConversionService } from './CurrencyConversionService';
 
 export class TransactionService {
   constructor(
     private transactionRepository: ITransactionRepository,
-    private socketManager: ISocketManager
+    private socketManager: ISocketManager,
+    private currencyConversionService: CurrencyConversionService
   ) {}
 
   async createTransaction(data: CreateTransactionData): Promise<Transaction> {
@@ -30,7 +32,7 @@ export class TransactionService {
     this.socketManager.broadcastNewTransaction(transaction);
 
     // Get updated analytics and broadcast
-    const analytics = await this.transactionRepository.getAnalytics();
+    const analytics = await this.getAnalytics();
     this.socketManager.broadcastAnalyticsUpdate(analytics);
 
     return transaction;
@@ -41,6 +43,30 @@ export class TransactionService {
   }
 
   async getAnalytics(): Promise<Analytics> {
-    return this.transactionRepository.getAnalytics();
+    // Use aggregation to get analytics by currency for better performance
+    const currencyStats = await this.transactionRepository.getAnalyticsByCurrency();
+    const totalTransactions = await this.transactionRepository.getTotalTransactions();
+    const uniqueCustomers = await this.transactionRepository.getUniqueCustomers();
+
+    // Convert all amounts to USD and sum them
+    let totalRevenueUSD = 0;
+    for (const stat of currencyStats) {
+      const convertedAmount = this.currencyConversionService.convertToBaseCurrency(
+        stat.totalAmount,
+        stat.currency,
+        'USD'
+      );
+      totalRevenueUSD += convertedAmount;
+    }
+
+    const averageTransactionValue = totalTransactions > 0 ? totalRevenueUSD / totalTransactions : 0;
+
+    return {
+      totalRevenue: totalRevenueUSD,
+      totalTransactions,
+      uniqueCustomers,
+      averageTransactionValue,
+      baseCurrency: 'USD',
+    };
   }
 } 

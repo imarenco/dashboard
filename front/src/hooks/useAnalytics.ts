@@ -9,6 +9,7 @@ export const useAnalytics = () => {
     totalTransactions: 0,
     uniqueCustomers: 0,
     averageTransactionValue: 0,
+    baseCurrency: 'USD',
   });
   const { onAnalyticsUpdate, offAnalyticsUpdate } = useSocket();
 

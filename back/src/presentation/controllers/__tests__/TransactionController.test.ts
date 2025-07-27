@@ -179,6 +179,7 @@ describe('TransactionController', () => {
         totalTransactions: 2,
         uniqueCustomers: 2,
         averageTransactionValue: 150,
+        baseCurrency: 'USD',
       };
 
       mockGetAnalyticsUseCase.execute.mockResolvedValue(mockAnalytics);

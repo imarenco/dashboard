@@ -1,6 +1,7 @@
 import { TransactionRepository } from '../infrastructure/database/repositories/TransactionRepository';
 import { SocketManager } from '../infrastructure/websocket/SocketManager';
 import { TransactionService } from '../domain/services/TransactionService';
+import { CurrencyConversionServiceImpl } from '../domain/services/CurrencyConversionService';
 import { CreateTransactionUseCase } from '../application/useCases/CreateTransactionUseCase';
 import { GetTransactionsUseCase } from '../application/useCases/GetTransactionsUseCase';
 import { GetAnalyticsUseCase } from '../application/useCases/GetAnalyticsUseCase';
@@ -28,8 +29,15 @@ export function setupDependencies(container: Container, socketManager: SocketMan
   container.register('transactionRepository', transactionRepository);
   container.register('socketManager', socketManager);
 
-  // Domain
-  const transactionService = new TransactionService(transactionRepository, socketManager);
+  // Domain Services
+  const currencyConversionService = new CurrencyConversionServiceImpl();
+  container.register('currencyConversionService', currencyConversionService);
+
+  const transactionService = new TransactionService(
+    transactionRepository, 
+    socketManager, 
+    currencyConversionService
+  );
   container.register('transactionService', transactionService);
 
   // Application
