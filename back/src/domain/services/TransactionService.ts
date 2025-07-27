@@ -18,6 +18,11 @@ export class TransactionService {
       throw new Error('Amount must be greater than 0');
     }
 
+    const validCurrencies = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'CNY', 'INR', 'BRL'];
+    if (!data.currency || !validCurrencies.includes(data.currency)) {
+      throw new Error('Currency must be one of: USD, EUR, GBP, CAD, AUD, JPY, CHF, CNY, INR, BRL');
+    }
+
     // Create transaction
     const transaction = await this.transactionRepository.create(data);
 

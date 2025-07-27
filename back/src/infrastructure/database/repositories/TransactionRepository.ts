@@ -56,6 +56,7 @@ export class TransactionRepository implements ITransactionRepository {
       id: document._id.toString(),
       customerName: document.customerName,
       amount: document.amount,
+      currency: document.currency,
       createdAt: document.createdAt
     };
   }

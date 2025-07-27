@@ -1,28 +1,19 @@
 import { CreateTransactionUseCase } from '../CreateTransactionUseCase';
 import { TransactionService } from '../../../domain/services/TransactionService';
-import { CreateTransactionData, Transaction } from '../../../domain/entities/Transaction';
+import { Transaction, CreateTransactionData } from '../../../domain/entities/Transaction';
 
 // Mock the TransactionService
-jest.mock('../../../domain/services/TransactionService');
-
-const MockedTransactionService = TransactionService as jest.MockedClass<typeof TransactionService>;
+const mockTransactionService = {
+  createTransaction: jest.fn(),
+  getAllTransactions: jest.fn(),
+  getAnalytics: jest.fn(),
+} as any;
 
 describe('CreateTransactionUseCase', () => {
   let createTransactionUseCase: CreateTransactionUseCase;
-  let mockTransactionService: jest.Mocked<TransactionService>;
 
   beforeEach(() => {
-    mockTransactionService = {
-      createTransaction: jest.fn(),
-      getAllTransactions: jest.fn(),
-      getAnalytics: jest.fn(),
-    } as any;
-
-    MockedTransactionService.mockImplementation(() => mockTransactionService);
     createTransactionUseCase = new CreateTransactionUseCase(mockTransactionService);
-  });
-
-  afterEach(() => {
     jest.clearAllMocks();
   });
 
@@ -30,12 +21,14 @@ describe('CreateTransactionUseCase', () => {
     const validTransactionData: CreateTransactionData = {
       customerName: 'John Doe',
       amount: 100.50,
+      currency: 'USD',
     };
 
     const expectedTransaction: Transaction = {
       id: '1',
       customerName: 'John Doe',
       amount: 100.50,
+      currency: 'USD',
       createdAt: new Date(),
     };
 
@@ -49,7 +42,7 @@ describe('CreateTransactionUseCase', () => {
     });
 
     it('should propagate errors from the service', async () => {
-      const errorMessage = 'Service error';
+      const errorMessage = 'Customer name is required';
       mockTransactionService.createTransaction.mockRejectedValue(new Error(errorMessage));
 
       await expect(createTransactionUseCase.execute(validTransactionData)).rejects.toThrow(errorMessage);

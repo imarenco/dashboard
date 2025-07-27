@@ -30,12 +30,14 @@ describe('TransactionService', () => {
     const validTransactionData: CreateTransactionData = {
       customerName: 'John Doe',
       amount: 100.50,
+      currency: 'USD',
     };
 
     const createdTransaction: Transaction = {
       id: '1',
       customerName: 'John Doe',
       amount: 100.50,
+      currency: 'USD',
       createdAt: new Date(),
     };
 
@@ -101,6 +103,17 @@ describe('TransactionService', () => {
       expect(mockTransactionRepository.create).not.toHaveBeenCalled();
       expect(mockSocketManager.broadcastNewTransaction).not.toHaveBeenCalled();
     });
+
+    it('should throw error when currency is invalid', async () => {
+      const invalidData = { ...validTransactionData, currency: 'INVALID' };
+
+      await expect(transactionService.createTransaction(invalidData)).rejects.toThrow(
+        'Currency must be one of: USD, EUR, GBP, CAD, AUD, JPY, CHF, CNY, INR, BRL'
+      );
+
+      expect(mockTransactionRepository.create).not.toHaveBeenCalled();
+      expect(mockSocketManager.broadcastNewTransaction).not.toHaveBeenCalled();
+    });
   });
 
   describe('getAllTransactions', () => {
@@ -110,12 +123,14 @@ describe('TransactionService', () => {
           id: '1',
           customerName: 'John Doe',
           amount: 100,
+          currency: 'USD',
           createdAt: new Date(),
         },
         {
           id: '2',
           customerName: 'Jane Smith',
           amount: 200,
+          currency: 'EUR',
           createdAt: new Date(),
         },
       ];

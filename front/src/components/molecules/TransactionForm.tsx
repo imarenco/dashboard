@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '../atoms/Input';
 import { Button } from '../atoms/Button';
+import { Select } from '../atoms/Select';
 import { TransactionFormData } from '@/types/transaction';
 
 interface TransactionFormProps {
@@ -9,6 +10,19 @@ interface TransactionFormProps {
   error?: string;
 }
 
+const CURRENCIES = [
+  { value: 'USD', label: 'USD - US Dollar' },
+  { value: 'EUR', label: 'EUR - Euro' },
+  { value: 'GBP', label: 'GBP - British Pound' },
+  { value: 'CAD', label: 'CAD - Canadian Dollar' },
+  { value: 'AUD', label: 'AUD - Australian Dollar' },
+  { value: 'JPY', label: 'JPY - Japanese Yen' },
+  { value: 'CHF', label: 'CHF - Swiss Franc' },
+  { value: 'CNY', label: 'CNY - Chinese Yuan' },
+  { value: 'INR', label: 'INR - Indian Rupee' },
+  { value: 'BRL', label: 'BRL - Brazilian Real' },
+];
+
 export const TransactionForm: React.FC<TransactionFormProps> = ({
   onSubmit,
   loading = false,
@@ -16,10 +30,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const [formData, setFormData] = useState<TransactionFormData>({
     customerName: '',
-    amount: ''
+    amount: '',
+    currency: 'USD'
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -51,18 +66,29 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         placeholder="Enter customer name"
       />
 
-      <Input
-        id="amount"
-        name="amount"
-        type="number"
-        step="0.01"
-        min="0"
-        label="Amount ($)"
-        required
-        value={formData.amount}
-        onChange={handleChange}
-        placeholder="0.00"
-      />
+      <div className="grid grid-cols-2 gap-4">
+        <Input
+          id="amount"
+          name="amount"
+          type="number"
+          step="0.01"
+          min="0"
+          label="Amount"
+          required
+          value={formData.amount}
+          onChange={handleChange}
+          placeholder="0.00"
+        />
+
+        <Select
+          id="currency"
+          name="currency"
+          label="Currency"
+          value={formData.currency}
+          onChange={handleChange}
+          options={CURRENCIES}
+        />
+      </div>
 
       <div className="flex items-center justify-between">
         <Button

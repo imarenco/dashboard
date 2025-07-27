@@ -33,6 +33,7 @@ const TestComponent = () => {
         id: '1',
         customerName: 'Test User',
         amount: 100,
+        currency: 'USD',
         createdAt: new Date().toISOString()
       })}>Add Transaction</button>
       <button onClick={() => searchTransactions('test')}>Search</button>
@@ -107,6 +108,7 @@ describe('TransactionContext', () => {
         id: '1',
         customerName: 'Test User',
         amount: 100,
+        currency: 'USD',
         createdAt: new Date().toISOString()
       }
     ]
@@ -161,12 +163,14 @@ describe('TransactionContext', () => {
         id: '1',
         customerName: 'John Doe',
         amount: 100,
+        currency: 'USD',
         createdAt: new Date().toISOString()
       },
       {
         id: '2',
         customerName: 'Jane Smith',
         amount: 200,
+        currency: 'EUR',
         createdAt: new Date().toISOString()
       }
     ]

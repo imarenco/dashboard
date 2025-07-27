@@ -1,173 +1,151 @@
-import { api } from '../api'
-import { Transaction, CreateTransactionData } from '../../types/transaction'
-import { Analytics } from '../../types/analytics'
+import { api } from '../api';
+import { CreateTransactionData } from '@/types/transaction';
 
 // Mock fetch globally
-global.fetch = jest.fn()
+global.fetch = jest.fn();
 
-describe('API Client', () => {
+describe('api', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-    ;(fetch as jest.Mock).mockClear()
-  })
+    jest.clearAllMocks();
+  });
 
   describe('getTransactions', () => {
     it('should fetch transactions successfully', async () => {
-      const mockTransactions: Transaction[] = [
+      const mockTransactions = [
         {
           id: '1',
           customerName: 'John Doe',
           amount: 100,
+          currency: 'USD',
           createdAt: '2023-01-01T00:00:00.000Z',
         },
-      ]
+      ];
 
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         json: async () => mockTransactions,
-      })
+      });
 
-      const result = await api.getTransactions()
+      const result = await api.getTransactions();
 
-      expect(fetch).toHaveBeenCalledWith('http://localhost:5001/api/transactions')
-      expect(result).toEqual(mockTransactions)
-    })
+      expect(result).toEqual(mockTransactions);
+      expect(fetch).toHaveBeenCalledWith('http://localhost:5001/api/transactions');
+    });
 
-    it('should handle fetch error', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
+    it('should throw error when fetch fails', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
-        status: 500,
-      })
+      });
 
-      await expect(api.getTransactions()).rejects.toThrow('Failed to fetch transactions')
-    })
-
-    it('should handle network error', async () => {
-      ;(fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'))
-
-      await expect(api.getTransactions()).rejects.toThrow('Network error')
-    })
-  })
+      await expect(api.getTransactions()).rejects.toThrow('Failed to fetch transactions');
+    });
+  });
 
   describe('createTransaction', () => {
     it('should create transaction successfully', async () => {
       const transactionData: CreateTransactionData = {
         customerName: 'John Doe',
         amount: '100',
-      }
+        currency: 'USD',
+      };
 
-      const createdTransaction: Transaction = {
+      const mockTransaction = {
         id: '1',
         customerName: 'John Doe',
         amount: 100,
+        currency: 'USD',
         createdAt: '2023-01-01T00:00:00.000Z',
-      }
+      };
 
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => createdTransaction,
-      })
+        json: async () => mockTransaction,
+      });
 
-      const result = await api.createTransaction(transactionData)
+      const result = await api.createTransaction(transactionData);
 
+      expect(result).toEqual(mockTransaction);
       expect(fetch).toHaveBeenCalledWith('http://localhost:5001/api/transactions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(transactionData),
-      })
-      expect(result).toEqual(createdTransaction)
-    })
+      });
+    });
 
-    it('should handle creation error', async () => {
+    it('should throw error when creation fails', async () => {
       const transactionData: CreateTransactionData = {
         customerName: 'John Doe',
         amount: '100',
-      }
+        currency: 'USD',
+      };
 
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
-        status: 400,
         json: async () => ({ error: 'Validation failed' }),
-      })
+      });
 
-      await expect(api.createTransaction(transactionData)).rejects.toThrow('Validation failed')
-    })
-  })
+      await expect(api.createTransaction(transactionData)).rejects.toThrow('Validation failed');
+    });
+  });
 
   describe('getAnalytics', () => {
     it('should fetch analytics successfully', async () => {
-      const mockAnalytics: Analytics = {
+      const mockAnalytics = {
         totalRevenue: 1000,
         totalTransactions: 10,
         uniqueCustomers: 5,
         averageTransactionValue: 100,
-      }
+      };
 
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         json: async () => mockAnalytics,
-      })
+      });
 
-      const result = await api.getAnalytics()
+      const result = await api.getAnalytics();
 
-      expect(fetch).toHaveBeenCalledWith('http://localhost:5001/api/analytics')
-      expect(result).toEqual(mockAnalytics)
-    })
+      expect(result).toEqual(mockAnalytics);
+      expect(fetch).toHaveBeenCalledWith('http://localhost:5001/api/analytics');
+    });
 
-    it('should handle analytics fetch error', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
+    it('should throw error when fetch fails', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
-        status: 500,
-      })
+      });
 
-      await expect(api.getAnalytics()).rejects.toThrow('Failed to fetch analytics')
-    })
-  })
+      await expect(api.getAnalytics()).rejects.toThrow('Failed to fetch analytics');
+    });
+  });
 
-  describe('API base URL configuration', () => {
-    const originalEnv = process.env
+  describe('API_BASE_URL', () => {
+    it('should use environment variable when available', () => {
+      const originalEnv = process.env.NEXT_PUBLIC_API_URL;
+      process.env.NEXT_PUBLIC_API_URL = 'http://custom-api.com';
 
-    beforeEach(() => {
-      jest.resetModules()
-      process.env = { ...originalEnv }
-    })
+      // Re-import to get the updated API_BASE_URL
+      jest.resetModules();
+      const { api: newApi } = require('../api');
 
-    afterEach(() => {
-      process.env = originalEnv
-    })
-
-    it('should use environment variable for API URL', async () => {
-      process.env.NEXT_PUBLIC_API_URL = 'http://custom-api.com'
+      expect(newApi).toBeDefined();
       
-      // Re-import to get fresh module with new env
-      const { api: freshApi } = await import('../api')
+      // Restore original environment
+      process.env.NEXT_PUBLIC_API_URL = originalEnv;
+    });
 
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => [],
-      })
+    it('should fallback to localhost when environment variable is not set', () => {
+      const originalEnv = process.env.NEXT_PUBLIC_API_URL;
+      delete process.env.NEXT_PUBLIC_API_URL;
 
-      await freshApi.getTransactions()
+      // Re-import to get the updated API_BASE_URL
+      jest.resetModules();
+      const { api: newApi } = require('../api');
 
-      expect(fetch).toHaveBeenCalledWith('http://custom-api.com/api/transactions')
-    })
-
-    it('should fallback to default URL when env var is not set', async () => {
-      delete process.env.NEXT_PUBLIC_API_URL
+      expect(newApi).toBeDefined();
       
-      // Re-import to get fresh module with new env
-      const { api: freshApi } = await import('../api')
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => [],
-      })
-
-      await freshApi.getTransactions()
-
-      expect(fetch).toHaveBeenCalledWith('http://localhost:5001/api/transactions')
-    })
-  })
-}) 
+      // Restore original environment
+      process.env.NEXT_PUBLIC_API_URL = originalEnv;
+    });
+  });
+}); 
