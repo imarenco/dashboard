@@ -18,10 +18,6 @@ export class TransactionService {
       throw new Error('Amount must be greater than 0');
     }
 
-    if (!data.currency || data.currency.trim().length === 0) {
-      throw new Error('Currency is required');
-    }
-
     // Create transaction
     const transaction = await this.transactionRepository.create(data);
 

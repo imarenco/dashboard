@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install all dependencies (including dev dependencies)
 RUN npm install
 
+# Install ts-node globally to ensure it's available
+RUN npm install -g ts-node typescript
+
 # Copy source code
 COPY . .
 

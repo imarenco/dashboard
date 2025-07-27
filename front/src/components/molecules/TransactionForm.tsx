@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Input } from '../atoms/Input';
-import { Select } from '../atoms/Select';
 import { Button } from '../atoms/Button';
 import { TransactionFormData } from '@/types/transaction';
 
@@ -10,15 +9,6 @@ interface TransactionFormProps {
   error?: string;
 }
 
-const CURRENCY_OPTIONS = [
-  { value: 'USD', label: 'USD ($)' },
-  { value: 'EUR', label: 'EUR (€)' },
-  { value: 'GBP', label: 'GBP (£)' },
-  { value: 'JPY', label: 'JPY (¥)' },
-  { value: 'CAD', label: 'CAD (C$)' },
-  { value: 'AUD', label: 'AUD (A$)' },
-];
-
 export const TransactionForm: React.FC<TransactionFormProps> = ({
   onSubmit,
   loading = false,
@@ -26,11 +16,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const [formData, setFormData] = useState<TransactionFormData>({
     customerName: '',
-    amount: '',
-    currency: 'USD'
+    amount: ''
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -68,20 +57,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         type="number"
         step="0.01"
         min="0"
-        label="Amount"
+        label="Amount ($)"
         required
         value={formData.amount}
         onChange={handleChange}
         placeholder="0.00"
-      />
-
-      <Select
-        id="currency"
-        name="currency"
-        label="Currency"
-        value={formData.currency}
-        onChange={handleChange}
-        options={CURRENCY_OPTIONS}
       />
 
       <div className="flex items-center justify-between">
