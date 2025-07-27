@@ -21,9 +21,12 @@ A modern, real-time sales analytics dashboard built with Next.js, Express.js, Mo
 
 ### Backend
 - **Express.js** for API server
+- **TypeScript** for type safety and better development experience
+- **Domain-Driven Design (DDD)** architecture with clean layer separation
 - **MongoDB** with Mongoose ODM
 - **Socket.IO** for real-time communication
 - **CORS** enabled for cross-origin requests
+- **Dependency Injection** for better testability and maintainability
 
 ## Prerequisites
 
@@ -41,10 +44,8 @@ A modern, real-time sales analytics dashboard built with Next.js, Express.js, Mo
 git clone <repository-url>
 cd real-time
 
-# Start all services (production)
-docker-compose up -d
 
-# Or for development with hot reloading
+# for development with hot reloading
 docker-compose -f docker-compose.dev.yml up -d
 ```
 
@@ -88,7 +89,7 @@ npm install
 Create a `.env` file in the `back` directory:
 ```env
 MONGODB_URI=mongodb://localhost:27017/sales-analytics
-PORT=5000
+PORT=5001
 ```
 
 Start the backend server:
@@ -115,15 +116,38 @@ npm run dev
 
 ```
 real-time/
-├── front/                 # Next.js frontend
+├── front/                 # Next.js frontend (Atomic Design)
 │   ├── src/
-│   │   └── app/
-│   │       ├── page.tsx           # Dashboard page
-│   │       └── add-transaction/
-│   │           └── page.tsx       # Add transaction form
+│   │   ├── components/   # Atomic Design components
+│   │   │   ├── atoms/    # Basic building blocks
+│   │   │   ├── molecules/# Simple combinations
+│   │   │   ├── organisms/# Complex UI sections
+│   │   │   └── templates/# Page layouts
+│   │   ├── hooks/        # Custom React hooks
+│   │   ├── lib/          # Utility functions
+│   │   ├── types/        # TypeScript interfaces
+│   │   └── app/          # Next.js App Router
 │   └── package.json
-├── back/                  # Express.js backend
-│   ├── server.js         # Main server file
+├── back/                  # Express.js backend (DDD Architecture)
+│   ├── src/
+│   │   ├── domain/       # Business logic and entities
+│   │   │   ├── entities/ # Domain entities
+│   │   │   ├── repositories/ # Repository interfaces
+│   │   │   └── services/ # Domain services
+│   │   ├── infrastructure/ # External concerns
+│   │   │   ├── database/ # Database models and repositories
+│   │   │   └── websocket/ # Socket.IO implementation
+│   │   ├── application/  # Use cases and application logic
+│   │   │   └── useCases/ # Application use cases
+│   │   ├── presentation/ # HTTP layer
+│   │   │   ├── controllers/ # Request handlers
+│   │   │   ├── routes/   # Route definitions
+│   │   │   ├── dto/      # Data Transfer Objects
+│   │   │   └── middleware/ # Express middleware
+│   │   ├── config/       # Configuration and DI container
+│   │   ├── utils/        # Utility functions
+│   │   └── app.ts        # Application entry point
+│   ├── dist/             # Compiled TypeScript
 │   └── package.json
 └── README.md
 ```
@@ -146,16 +170,23 @@ real-time/
 ## Technical Approach & Key Decisions
 
 ### Architecture Decisions
-1. **Separation of Concerns**: Clear separation between frontend and backend with well-defined APIs
-2. **Real-Time Communication**: Socket.IO for instant updates without polling
-3. **Type Safety**: TypeScript throughout the stack for better development experience
-4. **Modern UI**: Tailwind CSS for rapid, consistent styling
+1. **Domain-Driven Design (DDD)**: Clean architecture with clear layer separation (Domain, Infrastructure, Application, Presentation)
+2. **Atomic Design**: Frontend components organized by complexity (Atoms, Molecules, Organisms, Templates)
+3. **Separation of Concerns**: Clear separation between frontend and backend with well-defined APIs
+4. **Real-Time Communication**: Socket.IO for instant updates without polling
+5. **Type Safety**: TypeScript throughout the stack for better development experience
+6. **Modern UI**: Tailwind CSS for rapid, consistent styling
+7. **Dependency Injection**: Container pattern for better testability and maintainability
 
 ### Key Design Patterns
-1. **Component-Based Architecture**: Reusable React components with clear responsibilities
-2. **Event-Driven Updates**: Real-time updates through Socket.IO events
-3. **RESTful API Design**: Clean, predictable API endpoints
-4. **Error Handling**: Comprehensive error handling on both frontend and backend
+1. **Domain-Driven Design**: Clean architecture with bounded contexts and domain entities
+2. **Repository Pattern**: Abstract data access layer for better testability
+3. **Use Case Pattern**: Application logic organized in use cases
+4. **Component-Based Architecture**: Reusable React components with clear responsibilities
+5. **Event-Driven Updates**: Real-time updates through Socket.IO events
+6. **RESTful API Design**: Clean, predictable API endpoints
+7. **Error Handling**: Comprehensive error handling on both frontend and backend
+8. **Dependency Injection**: Container pattern for loose coupling
 
 ### Performance Considerations
 1. **Efficient Queries**: MongoDB aggregation for analytics calculations
@@ -219,7 +250,8 @@ docker-compose down
 #### Backend
 ```bash
 cd back
-npm run dev    # Start development server with nodemon
+npm run dev    # Start development server with ts-node
+npm run build  # Build TypeScript to JavaScript
 npm start      # Start production server
 ```
 
@@ -234,9 +266,9 @@ npm start      # Start production server
 ## Troubleshooting
 
 1. **MongoDB Connection Issues**: Ensure MongoDB is running and connection string is correct
-2. **Socket.IO Connection**: Check that backend is running on port 5000
+2. **Socket.IO Connection**: Check that backend is running on port 5001
 3. **CORS Errors**: Verify CORS configuration in backend server
-4. **Port Conflicts**: Ensure ports 3000 and 5000 are available
+4. **Port Conflicts**: Ensure ports 3000 and 5001 are available
 
 ## Contributing
 
