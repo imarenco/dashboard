@@ -17,8 +17,6 @@ NODE_ENV=development         # Environment (development/production)
 # Database Configuration
 MONGODB_URI=mongodb://localhost:27017/sales-analytics  # MongoDB connection string
 
-# CORS Configuration
-FRONTEND_URL=http://localhost:3000  # Frontend URL for CORS (default: http://localhost:3000)
 ```
 
 #### Frontend Environment Variables
@@ -256,9 +254,7 @@ npm test -- --clearCache
 npm test -- --verbose
 ```
 
-## 📝 Assumptions & Limitations
-
-### Limitations
+## Limitations
 - No pagination for large transaction lists
 - No offline support
 
@@ -272,13 +268,3 @@ npm test -- --verbose
 6. **Performance**: Debounced search and optimized re-renders
 7. **Scalability**: Multi-server WebSocket support
 8. **Code Quality**: TypeScript usage and clean code principles
-
-## 📈 Future Enhancements
-
-- User authentication and authorization
-- Multi-currency support
-- Advanced analytics and reporting
-- Data export functionality
-- Mobile app development
-- Performance monitoring and logging
-- Automated deployment pipeline 
