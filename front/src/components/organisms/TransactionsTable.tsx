@@ -69,7 +69,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                     {transaction.customerName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {formatCurrency(transaction.amount, "USD")}
+                    {formatCurrency(transaction.amount, transaction.currency)}
                   </td>
                 </tr>
               ))
