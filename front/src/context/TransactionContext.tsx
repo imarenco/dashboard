@@ -32,6 +32,11 @@ function transactionReducer(state: TransactionState, action: TransactionAction):
         error: null,
       };
     case 'ADD_TRANSACTION':
+      // Check if transaction already exists to prevent duplicates
+      const transactionExists = state.transactions.some(t => t.id === action.payload.id);
+      if (transactionExists) {
+        return state; // Don't add duplicate
+      }
       return {
         ...state,
         transactions: [action.payload, ...state.transactions],

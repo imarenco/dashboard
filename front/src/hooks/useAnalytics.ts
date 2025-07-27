@@ -4,7 +4,12 @@ import { api } from "@/lib/api";
 import { useSocket } from "./useSocket";
 
 export const useAnalytics = () => {
-  const [analytics, setAnalytics] = useState<Analytics>({ totalRevenue: 0 });
+  const [analytics, setAnalytics] = useState<Analytics>({
+    totalRevenue: 0,
+    totalTransactions: 0,
+    uniqueCustomers: 0,
+    averageTransactionValue: 0,
+  });
   const { onAnalyticsUpdate, offAnalyticsUpdate } = useSocket();
 
   const fetchAnalytics = async () => {

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card } from '../atoms/Card';
-import { Transaction } from '@/types/transaction';
-import { formatDate, formatCurrency } from '@/lib/format';
+import React from "react";
+import { Card } from "../atoms/Card";
+import { Transaction } from "@/types/transaction";
+import { formatDate, formatCurrency } from "@/lib/format";
 
 interface TransactionsTableProps {
   transactions: Transaction[];
@@ -10,13 +10,15 @@ interface TransactionsTableProps {
 
 export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   transactions,
-  loading = false
+  loading = false,
 }) => {
   if (loading) {
     return (
       <Card>
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Recent Transactions</h2>
+          <h2 className="text-lg font-medium text-gray-900">
+            Recent Transactions
+          </h2>
         </div>
         <div className="px-6 py-8 text-center text-gray-500">
           Loading transactions...
@@ -28,7 +30,9 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   return (
     <Card className="overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-medium text-gray-900">Recent Transactions</h2>
+        <h2 className="text-lg font-medium text-gray-900">
+          Recent Transactions
+        </h2>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -53,8 +57,11 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 </td>
               </tr>
             ) : (
-              transactions.map((transaction) => (
-                <tr key={transaction.id} className="hover:bg-gray-50">
+              transactions.map((transaction, index) => (
+                <tr
+                  key={`${transaction.id}-${index}`}
+                  className="hover:bg-gray-50"
+                >
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {formatDate(transaction.createdAt)}
                   </td>
@@ -62,7 +69,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                     {transaction.customerName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {formatCurrency(transaction.amount, 'USD')}
+                    {formatCurrency(transaction.amount, "USD")}
                   </td>
                 </tr>
               ))
@@ -72,4 +79,4 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       </div>
     </Card>
   );
-}; 
+};
