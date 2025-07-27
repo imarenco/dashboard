@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import { AddTransactionTemplate } from '@/components/templates/AddTransactionTemplate';
 import { api } from '@/lib/api';
 import { TransactionFormData } from '@/types/transaction';
+import { useTransactionContext } from '@/context/TransactionContext';
 
 export default function AddTransactionPage() {
   const router = useRouter();
+  const { addTransaction } = useTransactionContext();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -16,7 +18,8 @@ export default function AddTransactionPage() {
     setError('');
 
     try {
-      await api.createTransaction(formData);
+      const transaction = await api.createTransaction(formData);
+      addTransaction(transaction);
       router.push('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

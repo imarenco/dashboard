@@ -1,21 +1,44 @@
 'use client';
 
 import { DashboardTemplate } from '@/components/templates/DashboardTemplate';
-import { useTransactions } from '@/hooks/useTransactions';
-import { useAnalytics } from '@/hooks/useAnalytics';
+import { useTransactionContext } from '@/context/TransactionContext';
+import { useAnalyticsContext } from '@/context/AnalyticsContext';
 
 export default function DashboardPage() {
-  const { transactions, filteredTransactions, searchTerm, setSearchTerm, loading } = useTransactions();
-  const { analytics } = useAnalytics();
+  const { 
+    filteredTransactions, 
+    loading: transactionsLoading, 
+    error: transactionsError,
+    searchTerm,
+    setSearchTerm,
+    searchTransactions
+  } = useTransactionContext();
+
+  const { 
+    analytics, 
+    loading: analyticsLoading, 
+    error: analyticsError 
+  } = useAnalyticsContext();
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    searchTransactions(term);
+  };
 
   return (
     <DashboardTemplate
+      transactions={filteredTransactions}
       analytics={analytics}
-      transactions={transactions}
-      filteredTransactions={filteredTransactions}
+      loading={{
+        transactions: transactionsLoading,
+        analytics: analyticsLoading
+      }}
+      error={{
+        transactions: transactionsError,
+        analytics: analyticsError
+      }}
       searchTerm={searchTerm}
-      setSearchTerm={setSearchTerm}
-      loading={loading}
+      onSearch={handleSearch}
     />
   );
 }

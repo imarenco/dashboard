@@ -6,28 +6,34 @@ import { Analytics } from '@/types/analytics';
 import { Transaction } from '@/types/transaction';
 
 interface DashboardTemplateProps {
-  analytics: Analytics;
+  analytics: Analytics | null;
   transactions: Transaction[];
-  filteredTransactions: Transaction[];
+  loading: {
+    transactions: boolean;
+    analytics: boolean;
+  };
+  error: {
+    transactions: string | null;
+    analytics: string | null;
+  };
   searchTerm: string;
-  setSearchTerm: (value: string) => void;
-  loading: boolean;
+  onSearch: (value: string) => void;
 }
 
 export const DashboardTemplate: React.FC<DashboardTemplateProps> = ({
   analytics,
   transactions,
-  filteredTransactions,
+  loading,
+  error,
   searchTerm,
-  setSearchTerm,
-  loading
+  onSearch
 }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <DashboardHeader
           searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+          onSearch={onSearch}
         />
         
         <AnalyticsCards
@@ -36,8 +42,8 @@ export const DashboardTemplate: React.FC<DashboardTemplateProps> = ({
         />
         
         <TransactionsTable
-          transactions={filteredTransactions}
-          loading={loading}
+          transactions={transactions}
+          loading={loading.transactions}
         />
       </div>
     </div>

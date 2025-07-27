@@ -5,12 +5,12 @@ import { Button } from '../atoms/Button';
 
 interface DashboardHeaderProps {
   searchTerm: string;
-  setSearchTerm: (value: string) => void;
+  onSearch: (value: string) => void;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   searchTerm,
-  setSearchTerm
+  onSearch
 }) => {
   return (
     <div className="mb-8">
@@ -24,7 +24,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <SearchBar
           value={searchTerm}
-          onChange={setSearchTerm}
+          onChange={onSearch}
           placeholder="Search by customer name..."
         />
         <Link href="/add-transaction">
