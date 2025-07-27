@@ -5,6 +5,7 @@ import { TransactionContextType, TransactionState } from '@/types/transactionCon
 import { Transaction } from '@/types/transaction';
 import { api } from '@/lib/api';
 import { useSocket } from '@/hooks/useSocket';
+import { useDebounce } from '@/hooks/useDebounce';
 
 // Initial state
 const initialState: TransactionState = {
@@ -98,7 +99,7 @@ export function TransactionProvider({ children }: { children: React.ReactNode })
     dispatch({ type: 'SET_SEARCH_TERM', payload: searchTerm });
   };
 
-  const searchTransactions = async (searchTerm: string) => {
+  const performSearch = async (searchTerm: string) => {
     setLoading(true);
     setError(null);
     
@@ -119,6 +120,16 @@ export function TransactionProvider({ children }: { children: React.ReactNode })
     } finally {
       setLoading(false);
     }
+  };
+
+  // Debounced search with 500ms delay
+  const debouncedSearch = useDebounce(performSearch, 500);
+
+  const searchTransactions = (searchTerm: string) => {
+    // Update search term immediately for UI responsiveness
+    setSearchTerm(searchTerm);
+    // Perform debounced search
+    debouncedSearch(searchTerm);
   };
 
   // Computed values

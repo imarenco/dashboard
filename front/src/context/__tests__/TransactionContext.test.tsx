@@ -102,7 +102,7 @@ describe('TransactionContext', () => {
     expect(screen.getByTestId('transactions-count')).toHaveTextContent('1')
   })
 
-  it('should search transactions', async () => {
+  it('should search transactions with debounce', async () => {
     const mockTransactions = [
       {
         id: '1',
@@ -125,8 +125,16 @@ describe('TransactionContext', () => {
       expect(screen.getByTestId('loading')).toHaveTextContent('false')
     })
 
+    // Search term should update immediately
     await act(async () => {
       fireEvent.click(screen.getByText('Search'))
+    })
+
+    expect(screen.getByTestId('search-term')).toHaveTextContent('test')
+
+    // Wait for debounced search to execute
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 500))
     })
 
     await waitFor(() => {
@@ -134,7 +142,7 @@ describe('TransactionContext', () => {
     })
   })
 
-  it('should handle search error', async () => {
+  it('should handle search error with debounce', async () => {
     mockApi.getTransactions.mockRejectedValue(new Error('Search failed'))
 
     render(
@@ -152,12 +160,17 @@ describe('TransactionContext', () => {
       fireEvent.click(screen.getByText('Search'))
     })
 
+    // Wait for debounced search to execute
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 500))
+    })
+
     await waitFor(() => {
       expect(screen.getByTestId('error')).toHaveTextContent('Search failed')
     })
   })
 
-  it('should filter transactions by search term', async () => {
+  it('should filter transactions by search term with debounce', async () => {
     const mockTransactions = [
       {
         id: '1',
@@ -187,9 +200,16 @@ describe('TransactionContext', () => {
       expect(screen.getByTestId('transactions-count')).toHaveTextContent('2')
     })
 
-    // Then search for "John" which should match one transaction
+    // Search term should update immediately
     await act(async () => {
       fireEvent.click(screen.getByText('Search John'))
+    })
+
+    expect(screen.getByTestId('search-term')).toHaveTextContent('John')
+
+    // Wait for debounced search to execute
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 500))
     })
 
     await waitFor(() => {

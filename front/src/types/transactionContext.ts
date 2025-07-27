@@ -14,7 +14,7 @@ export interface TransactionContextType extends TransactionState {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   setSearchTerm: (searchTerm: string) => void;
-  searchTransactions: (searchTerm: string) => Promise<void>;
+  searchTransactions: (searchTerm: string) => void;
   
   // Computed values
   filteredTransactions: Transaction[];
