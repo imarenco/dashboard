@@ -11,9 +11,6 @@ A comprehensive real-time sales analytics dashboard built with Next.js, Express.
 git clone <repository-url>
 cd real-time
 
-# Start all services
-./start.sh
-
 # Or manually with Docker Compose
 docker-compose up -d
 ```
@@ -128,7 +125,6 @@ The project includes comprehensive test coverage for:
 ### Infrastructure
 - **Containerization**: Docker & Docker Compose
 - **Database**: MongoDB
-- **Load Balancer**: Nginx (for multi-server setup)
 
 ## 📡 API Endpoints
 
@@ -176,11 +172,6 @@ For production scaling, the application supports multiple backend servers with s
 - **Redis**: Message broker for Socket.IO scaling
 - **Nginx**: Load balancer for API and WebSocket traffic
 - **Multiple Backend Instances**: Horizontal scaling
-
-### Configuration
-- Set `REDIS_URL` environment variable
-- Configure `SERVER_ID` for each backend instance
-- Use Nginx for load balancing
 
 ## 📊 Features
 
@@ -244,16 +235,7 @@ npm test -- --verbose
 
 ## 📝 Assumptions & Limitations
 
-### Assumptions
-- All transactions are in USD (dollars)
-- Customer names are case-insensitive for search
-- Real-time updates are not critical for analytics accuracy
-- Single-page application architecture
-
 ### Limitations
-- No user authentication/authorization
-- No data persistence for search preferences
-- Limited to single currency (USD)
 - No pagination for large transaction lists
 - No offline support
 
